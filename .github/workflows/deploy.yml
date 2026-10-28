@@ -60,20 +60,20 @@ jobs:
       if: success()
       run: gcloud auth configure-docker
     
+        
     - name: Build and push Task Tracker backend
       if: success()
       run: |
         cd backend
-        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-backend:${{ github.sha }} .
+        docker build --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-backend:${{ github.sha }} .
         docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-backend:${{ github.sha }}
-    
+
     - name: Build and push Task Tracker frontend
       if: success()
       run: |
         cd frontend
-        # Get the backend URL for the Task Tracker frontend
         BACKEND_URL=$(gcloud run services describe task-backend --region=${{ secrets.GCP_REGION }} --format='value(status.url)' 2>/dev/null || echo "https://task-backend-placeholder.run.app")
-        docker build --build-arg VITE_API_URL=$BACKEND_URL -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-frontend:${{ github.sha }} .
+        docker build --build-arg VITE_API_URL=$BACKEND_URL --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-frontend:${{ github.sha }} .
         docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-frontend:${{ github.sha }}
     
     - name: Deploy Task Tracker backend
