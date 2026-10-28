@@ -54,7 +54,7 @@ app.delete('/api/tasks/:id', (req, res) => {
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log('Server running on port ${PORT}');
+    console.log(`Server running on port ${PORT}`);
   });
 }
 
